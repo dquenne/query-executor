@@ -32,14 +32,10 @@ console.log("total count", count.next(), count.next());
 
 const count2 = new Count({
   inputs: [
-    new Select({
-      whereClause: {
-        left: "movieId",
-        operation: Comparator.LessThan,
-        right: 5000,
-      },
-      input: new FileScan({ filename: tableFilename }),
-    }),
+    new Select(
+      [new FileScan({ filename: tableFilename })],
+      (val) => Number(val[0]) < 5000
+    ),
   ],
 });
 
