@@ -6,11 +6,8 @@ import { Project } from "../../src/nodes/Project.ts";
 
 Deno.test("Project - basic", function () {
   const input = new SimpleIterator(fakeMovieTuples);
-  const it = new Project({
-    columns: ["id"],
-    input: input,
-  });
+  const it = new Project([input], [0, 2]);
   it.init();
 
-  assertEquals(it.next(), { id: fakeMovieTuples[0].id });
+  assertEquals(it.next(), [fakeMovieTuples[0][0], fakeMovieTuples[0][2]]);
 });

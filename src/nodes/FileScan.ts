@@ -10,7 +10,7 @@ interface FileScanOptions {
   dependencies?: { readFileFunc?: readTable };
 }
 
-export class FileScan extends QueryIterator<any> {
+export class FileScan extends QueryIterator {
   filename: string;
   private columns?: string[];
   private rows?: string[][];
@@ -33,7 +33,7 @@ export class FileScan extends QueryIterator<any> {
     if (!this.columns || !this.rows) {
       throw new NotInitializeException();
     }
-    return keyByColumns(this.columns, this.rows[this.rowIndex++]);
+    return this.rows[this.rowIndex++];
   }
 
   close() {

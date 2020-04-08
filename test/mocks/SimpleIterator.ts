@@ -1,16 +1,12 @@
-import { QueryIterator, GenericTuple } from "../../src/nodes/QueryIterator.ts";
+import { QueryIterator, Tuple } from "../../src/nodes/QueryIterator.ts";
 
-export class SimpleIterator<
-  TupleType extends GenericTuple
-> extends QueryIterator<TupleType> {
+export class SimpleIterator extends QueryIterator {
   index = 0;
-  constructor(private data: TupleType[]) {
+  constructor(private data: Tuple[]) {
     super([]);
   }
 
   next() {
-    const val = this.data[this.index];
-    this.index += 1;
-    return val;
+    return this.data[this.index++];
   }
 }

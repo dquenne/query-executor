@@ -1,20 +1,9 @@
-import { QueryIterator, EOF, GenericTuple } from "./QueryIterator.ts";
-import { select } from "../lib/util/objectUtil.ts";
+import { QueryIterator, EOF } from "./QueryIterator.ts";
+import { selectIndices } from "../lib/util/objectUtil.ts";
 
-export class Project<
-  InputTuple extends GenericTuple,
-  SelectedColumn extends string & keyof InputTuple
-> extends QueryIterator<Pick<InputTuple, SelectedColumn>> {
-  inputs: [QueryIterator<InputTuple>];
-  columns: SelectedColumn[];
-
-  constructor(options: {
-    columns: SelectedColumn[];
-    input: QueryIterator<InputTuple>;
-  }) {
-    super([options.input]);
-    this.inputs = [options.input];
-    this.columns = options.columns;
+export class Project extends QueryIterator {
+  constructor(public inputs: [QueryIterator], private indices: number[]) {
+    super(inputs);
   }
 
   next() {
@@ -22,6 +11,6 @@ export class Project<
     if (!nextInput) {
       return EOF;
     }
-    return select(this.columns, nextInput);
+    return selectIndices(this.indices, nextInput);
   }
 }

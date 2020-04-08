@@ -1,7 +1,3 @@
-import { keyByColumns } from "../../src/lib/util/objectUtil.ts";
-
-type hardCodedMovieTupleType = { id: string; name: string; genres: string };
-
 export const fakeMovieTable = {
   header: ["id", "name", "genres"],
   data: [
@@ -11,6 +7,4 @@ export const fakeMovieTable = {
   ],
 };
 
-export const fakeMovieTuples = fakeMovieTable.data.map((row) =>
-  keyByColumns(fakeMovieTable.header, row)
-) as hardCodedMovieTupleType[];
+export const fakeMovieTuples = fakeMovieTable.data;

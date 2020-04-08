@@ -1,25 +1,23 @@
-import { QueryIterator } from "../../nodes/QueryIterator.ts";
+import { Iterator } from "../../nodes/Iterator.ts";
 
-export function each<T>(
-  it: QueryIterator<T>,
-  callback: (val: T) => void
+export function forEach<TNext, TDone>(
+  it: Iterator<TNext, TDone>,
+  callback: (val: TNext) => void
 ): void {
   let next = it.next();
-  while (next != undefined) {
+  while (!it.isDone(next)) {
     callback(next);
     next = it.next();
   }
 }
 
-export function nextUntil<T>(
-  it: QueryIterator<T>,
-  predicate: (val: T) => boolean
+export function nextUntil<TNext, TDone>(
+  it: Iterator<TNext, TDone>,
+  predicate: (val: TNext) => boolean | undefined
 ) {
   let next = it.next();
-  while (next != undefined) {
-    if (predicate(next)) {
-      return next;
-    }
+  while (!it.isDone(next) && !predicate(next)) {
     next = it.next();
   }
+  return next;
 }

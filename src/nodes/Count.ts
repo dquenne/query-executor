@@ -1,14 +1,12 @@
-import { each } from "../lib/util/iteratorUtil.ts";
+import { forEach } from "../lib/util/iteratorUtil.ts";
 import { QueryIterator, EOF } from "./QueryIterator.ts";
 
 interface Options {
-  inputs: [QueryIterator<any>];
+  inputs: [QueryIterator];
 }
 
-type CountTuple = { count: number };
-
-export class Count extends QueryIterator<CountTuple> {
-  inputs: QueryIterator<any>[];
+export class Count extends QueryIterator {
+  inputs: QueryIterator[];
   private index = 0;
 
   constructor(options: Options) {
@@ -21,8 +19,8 @@ export class Count extends QueryIterator<CountTuple> {
       return EOF;
     }
     let count = 0;
-    each(this.inputs[0], () => count++);
+    forEach(this.inputs[0], () => count++);
     this.index++;
-    return { count };
+    return [String(count)];
   }
 }

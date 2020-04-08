@@ -1,23 +1,29 @@
-// not sure this is the best
+import { Iterator } from "./Iterator.ts";
+
 export const EOF = undefined;
 export type EOF = undefined;
 
-export type GenericTuple = { [key: string]: any };
+export type TupleValue = string;
 
-export abstract class QueryIterator<TupleType extends GenericTuple> {
-  inputs: QueryIterator<any>[];
+export type Tuple = TupleValue[];
 
-  constructor(inputs: QueryIterator<any>[]) {
-    this.inputs = inputs;
+export abstract class QueryIterator extends Iterator<Tuple, EOF> {
+  constructor(public inputs: QueryIterator[]) {
+    super();
   }
+
   init() {
     this.inputs.forEach((input) => input.init());
   }
 
-  abstract next(): TupleType | EOF;
+  abstract next(): Tuple | EOF;
 
   close() {
     this.inputs.forEach((input) => input.close());
+  }
+
+  isDone(value: Tuple | EOF): value is EOF {
+    return value === EOF;
   }
 }
 

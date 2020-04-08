@@ -38,3 +38,18 @@ export function select<T, SelectedColumn extends keyof T>(
     {} as { [key in SelectedColumn]: any }
   );
 }
+
+/**
+ *
+ * @param indices indices to use from input
+ * @param input array from which to select some or all values
+ * @returns a subset of the original array's values, in order
+ */
+export function selectIndices<T>(
+  indices: number[] | Set<number>,
+  input: Array<T>
+) {
+  if (Array.isArray(indices))
+    return input.filter((val, index) => indices.includes(index));
+  return input.filter((val, index) => indices.has(index));
+}

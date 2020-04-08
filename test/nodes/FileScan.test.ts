@@ -12,9 +12,5 @@ Deno.test("FileScan - basic", function () {
   });
   fsIterator.init();
 
-  assertEquals(fsIterator.next(), {
-    id: fakeMovieTable.data[0][0],
-    name: fakeMovieTable.data[0][1],
-    genres: fakeMovieTable.data[0][2],
-  });
+  assertEquals(fsIterator.next(), fakeMovieTable.data[0]);
 });

@@ -12,6 +12,6 @@ Deno.test("Count - basic", function () {
   });
   it.init();
 
-  assertEquals(it.next(), { count: fakeMovieTable.data.length });
+  assertEquals(it.next(), [String(fakeMovieTable.data.length)]);
   assertEquals(it.next(), EOF);
 });
