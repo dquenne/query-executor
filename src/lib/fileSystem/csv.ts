@@ -16,6 +16,8 @@ export function readCsv(
     .split("\r\n")
     .map((line) => line.split(","));
 
+  data.pop(); // sloppy fix to account for final newline
+
   return {
     header,
     data,
