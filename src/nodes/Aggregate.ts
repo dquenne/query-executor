@@ -10,7 +10,7 @@ interface AggregateOptions<State> {
 
 export class Aggregate<State extends {}> extends QueryIterator {
   private index = 0;
-  private state: State;
+  private initialState: State;
   private callback: (value: Tuple, prevState: State) => State;
   private final: (endState: State) => Tuple;
 
@@ -19,7 +19,7 @@ export class Aggregate<State extends {}> extends QueryIterator {
     public inputs: [QueryIterator]
   ) {
     super(inputs);
-    this.state = options.initialState;
+    this.initialState = options.initialState;
     this.callback = options.callback;
     this.final = options.final;
   }
@@ -28,10 +28,11 @@ export class Aggregate<State extends {}> extends QueryIterator {
     if (this.index >= 1) {
       return EOF;
     }
+    let state = this.initialState;
     forEach(this.inputs[0] as BaseIterator<Tuple, EOF>, (val) => {
-      this.state = this.callback(val, this.state);
+      state = this.callback(val, state);
     });
     this.index++;
-    return this.final(this.state);
+    return this.final(state);
   }
 }
