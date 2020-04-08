@@ -1,4 +1,4 @@
-import { Iterator } from "./Iterator.ts";
+import { BaseIterator } from "./Iterator.ts";
 
 export const EOF = undefined;
 export type EOF = undefined;
@@ -7,7 +7,7 @@ export type TupleValue = string;
 
 export type Tuple = TupleValue[];
 
-export abstract class QueryIterator implements Iterator<Tuple, EOF> {
+export abstract class QueryIterator implements BaseIterator<Tuple, EOF> {
   constructor(public inputs: QueryIterator[]) {}
 
   init() {

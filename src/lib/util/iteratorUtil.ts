@@ -1,7 +1,7 @@
-import { Iterator } from "../../nodes/Iterator.ts";
+import { BaseIterator } from "../../nodes/Iterator.ts";
 
 export function forEach<TNext, TDone>(
-  it: Iterator<TNext, TDone>,
+  it: BaseIterator<TNext, TDone>,
   callback: (val: TNext) => void
 ): void {
   let next = it.next();
@@ -12,7 +12,7 @@ export function forEach<TNext, TDone>(
 }
 
 export function nextUntil<TNext, TDone>(
-  it: Iterator<TNext, TDone>,
+  it: BaseIterator<TNext, TDone>,
   predicate: (val: TNext) => boolean | undefined
 ) {
   let next = it.next();

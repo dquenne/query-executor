@@ -1,4 +1,4 @@
-export interface Iterator<TNext, TDone> {
+export interface BaseIterator<TNext, TDone> {
   init(): void;
 
   next(): TNext | TDone;
