@@ -1,11 +1,9 @@
-export abstract class Iterator<TNext, TDone> {
-  constructor() {}
+export interface Iterator<TNext, TDone> {
+  init(): void;
 
-  abstract init(): void;
+  next(): TNext | TDone;
 
-  abstract next(): TNext | TDone;
+  isDone(value: TNext | TDone): value is TDone;
 
-  abstract isDone(value: TNext | TDone): value is TDone;
-
-  abstract close(): void;
+  close(): void;
 }
