@@ -11,6 +11,12 @@ export function forEach<TNext, TDone>(
   }
 }
 
+export function drain<TNext, TDone>(it: BaseIterator<TNext, TDone>) {
+  const res = <TNext[]>[];
+  forEach(it, (val) => res.push(val));
+  return res;
+}
+
 export function nextUntil<TNext, TDone>(
   it: BaseIterator<TNext, TDone>,
   predicate: (val: TNext) => boolean | undefined

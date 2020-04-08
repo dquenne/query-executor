@@ -7,8 +7,10 @@ export type TupleValue = string;
 
 export type Tuple = TupleValue[];
 
+export type IQueryIterator = BaseIterator<Tuple, EOF>;
+
 export abstract class QueryIterator implements BaseIterator<Tuple, EOF> {
-  constructor(public inputs: QueryIterator[]) {}
+  constructor(public inputs: IQueryIterator[]) {}
 
   init() {
     this.inputs.forEach((input) => input.init());
