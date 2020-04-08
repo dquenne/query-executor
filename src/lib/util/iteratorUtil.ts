@@ -21,3 +21,14 @@ export function nextUntil<TNext, TDone>(
   }
   return next;
 }
+
+export function isInitialized<T>(val: T | undefined): val is T {
+  return val !== undefined;
+}
+
+export class NotInitializedException extends Error {
+  constructor() {
+    super();
+    this.message = "Query iterator not initialized";
+  }
+}

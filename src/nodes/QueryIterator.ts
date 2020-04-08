@@ -26,10 +26,3 @@ export abstract class QueryIterator extends Iterator<Tuple, EOF> {
     return value === EOF;
   }
 }
-
-export class NotInitializeException extends Error {
-  constructor() {
-    super();
-    this.message = "Query iterator not initialized";
-  }
-}

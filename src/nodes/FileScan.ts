@@ -1,7 +1,10 @@
 import { readCsv } from "../lib/fileSystem/csv.ts";
-import { keyByColumns } from "../lib/util/objectUtil.ts";
+import {
+  isInitialized,
+  NotInitializedException,
+} from "../lib/util/iteratorUtil.ts";
 
-import { QueryIterator, NotInitializeException } from "./QueryIterator.ts";
+import { QueryIterator } from "./QueryIterator.ts";
 
 type readTable = (filename: string) => { header: string[]; data: string[][] };
 
@@ -30,8 +33,8 @@ export class FileScan extends QueryIterator {
   }
 
   next() {
-    if (!this.columns || !this.rows) {
-      throw new NotInitializeException();
+    if (!isInitialized(this.columns) || !isInitialized(this.rows)) {
+      throw new NotInitializedException();
     }
     return this.rows[this.rowIndex++];
   }
