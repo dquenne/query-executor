@@ -1,6 +1,6 @@
 import { FileScan } from "./src/nodes/FileScan.ts";
 import { Count } from "./src/nodes/Count.ts";
-import { Select, Comparator } from "./src/nodes/Select.ts";
+import { Select } from "./src/nodes/Select.ts";
 
 const tableFilename = Deno.args[0];
 
