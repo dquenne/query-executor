@@ -7,9 +7,7 @@ import { EOF } from "../../src/nodes/QueryIterator.ts";
 
 Deno.test("Count - basic", function () {
   const input = new SimpleIterator(fakeMovieTuples);
-  const it = new Count({
-    inputs: [input],
-  });
+  const it = new Count({}, [input]);
   it.init();
 
   assertEquals(it.next(), [String(fakeMovieTable.data.length)]);

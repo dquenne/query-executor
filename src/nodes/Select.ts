@@ -16,11 +16,14 @@ export type WhereClause<T> = {
 };
 
 export class Select extends QueryIterator {
+  predicate: (val: Tuple) => boolean;
+
   constructor(
-    public inputs: [QueryIterator],
-    public predicate: (val: Tuple) => boolean
+    options: { predicate: (val: Tuple) => boolean },
+    public inputs: [QueryIterator]
   ) {
     super(inputs);
+    this.predicate = options.predicate;
   }
 
   next() {

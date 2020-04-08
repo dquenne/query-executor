@@ -20,7 +20,7 @@ export class FileScan extends QueryIterator {
   private rowIndex = 0;
   readTable: readTable;
 
-  constructor(options: FileScanOptions) {
+  constructor(options: FileScanOptions, public inputs: [] = []) {
     super([]);
     this.filename = options.filename;
     this.readTable = options.dependencies?.readFileFunc || readCsv;

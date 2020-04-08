@@ -22,23 +22,24 @@ fs.init();
 
 console.log("first three", [fs.next(), fs.next(), fs.next()]);
 
-const count = new Count({
-  inputs: [new FileScan({ filename: tableFilename })],
-});
+const countIterator = new Count({}, [
+  new FileScan({ filename: tableFilename }),
+]);
 
-count.init();
+countIterator.init();
 
-console.log("total count", count.next(), count.next());
+console.log("total count", countIterator.next(), countIterator.next());
 
-const count2 = new Count({
-  inputs: [
-    new Select(
-      [new FileScan({ filename: tableFilename })],
-      (val) => Number(val[0]) < 5000
-    ),
-  ],
-});
+const countIterator2 = new Count({}, [
+  new Select({ predicate: (val) => Number(val[0]) < 5000 }, [
+    new FileScan({ filename: tableFilename }),
+  ]),
+]);
 
-count2.init();
+countIterator2.init();
 
-console.log("how many with id < 5000", count2.next(), count2.next());
+console.log(
+  "how many with id < 5000",
+  countIterator2.next(),
+  countIterator2.next()
+);

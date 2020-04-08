@@ -1,17 +1,13 @@
 import { forEach } from "../lib/util/iteratorUtil.ts";
 import { QueryIterator, EOF } from "./QueryIterator.ts";
 
-interface Options {
-  inputs: [QueryIterator];
-}
+interface CountOptions {}
 
 export class Count extends QueryIterator {
-  inputs: QueryIterator[];
   private index = 0;
 
-  constructor(options: Options) {
-    super(options.inputs);
-    this.inputs = options.inputs;
+  constructor(private options: CountOptions, public inputs: [QueryIterator]) {
+    super(inputs);
   }
 
   next() {
