@@ -1,6 +1,6 @@
 import { FileScan } from "./src/nodes/FileScan.ts";
 import { Count } from "./src/nodes/Count.ts";
-import { Select } from "./src/nodes/Select.ts";
+import { Selection } from "./src/nodes/Selection.ts";
 import { MemorySort } from "./src/nodes/MemorySort.ts";
 
 const tableFilename = Deno.args[0];
@@ -32,7 +32,7 @@ countIterator.init();
 console.log("total count", countIterator.next(), countIterator.next());
 
 const countIterator2 = new Count({}, [
-  new Select({ predicate: (val) => Number(val[0]) < 5000 }, [
+  new Selection({ predicate: (val) => Number(val[0]) < 5000 }, [
     new FileScan({ filename: tableFilename }),
   ]),
 ]);
@@ -49,7 +49,7 @@ const descendingComparator = (index: number) => (a: string[], b: string[]) =>
   Number(b[index]) - Number(a[index]);
 
 const memSortIt = new MemorySort({ comparator: descendingComparator(0) }, [
-  new Select({ predicate: (val) => val[1].length < 15 }, [
+  new Selection({ predicate: (val) => val[1].length < 15 }, [
     new FileScan({ filename: tableFilename }),
   ]),
 ]);
