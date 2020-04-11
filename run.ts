@@ -1,7 +1,7 @@
-import { FileScan } from "./src/nodes/FileScan.ts";
-import { Count } from "./src/nodes/Count.ts";
-import { Selection } from "./src/nodes/Selection.ts";
-import { MemorySort } from "./src/nodes/MemorySort.ts";
+import { FileScanIterator } from "./src/nodes/FileScan.ts";
+import { CountIterator } from "./src/nodes/Count.ts";
+import { SelectionIterator } from "./src/nodes/Selection.ts";
+import { MemorySortIterator } from "./src/nodes/MemorySort.ts";
 
 const tableFilename = Deno.args[0];
 
@@ -17,23 +17,23 @@ if (!tableFilename) {
   Deno.exit(1);
 }
 
-const fs = new FileScan({ filename: tableFilename });
+const fs = new FileScanIterator({ filename: tableFilename });
 
 fs.init();
 
 console.log("first three", [fs.next(), fs.next(), fs.next()]);
 
-const countIterator = new Count({}, [
-  new FileScan({ filename: tableFilename }),
+const countIterator = new CountIterator({}, [
+  new FileScanIterator({ filename: tableFilename }),
 ]);
 
 countIterator.init();
 
 console.log("total count", countIterator.next(), countIterator.next());
 
-const countIterator2 = new Count({}, [
-  new Selection({ predicate: (val) => Number(val[0]) < 5000 }, [
-    new FileScan({ filename: tableFilename }),
+const countIterator2 = new CountIterator({}, [
+  new SelectionIterator({ predicate: (val) => Number(val[0]) < 5000 }, [
+    new FileScanIterator({ filename: tableFilename }),
   ]),
 ]);
 
@@ -48,11 +48,14 @@ console.log(
 const descendingComparator = (index: number) => (a: string[], b: string[]) =>
   Number(b[index]) - Number(a[index]);
 
-const memSortIt = new MemorySort({ comparator: descendingComparator(0) }, [
-  new Selection({ predicate: (val) => val[1].length < 15 }, [
-    new FileScan({ filename: tableFilename }),
-  ]),
-]);
+const memSortIt = new MemorySortIterator(
+  { comparator: descendingComparator(0) },
+  [
+    new SelectionIterator({ predicate: (val) => val[1].length < 15 }, [
+      new FileScanIterator({ filename: tableFilename }),
+    ]),
+  ]
+);
 
 memSortIt.init();
 

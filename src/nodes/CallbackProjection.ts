@@ -3,7 +3,7 @@ import { QueryIterator, EOF, Tuple } from "./QueryIterator.ts";
 /**
  * perform arbitrary callback function on each tuple from input iterator
  */
-export class CallbackProjection extends QueryIterator {
+export class CallbackProjectionIterator extends QueryIterator {
   callback: (input: Tuple) => Tuple;
   constructor(
     options: { callback: (input: Tuple) => Tuple },

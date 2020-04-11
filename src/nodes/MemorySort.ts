@@ -2,7 +2,7 @@ import { drain } from "../lib/util/iteratorUtil.ts";
 
 import { QueryIterator, Tuple, IQueryIterator } from "./QueryIterator.ts";
 
-export class MemorySort extends QueryIterator {
+export class MemorySortIterator extends QueryIterator {
   index = 0;
   comparator: (a: Tuple, b: Tuple) => number;
   sorted: Tuple[] | undefined;

@@ -13,7 +13,7 @@ interface FileScanOptions {
   dependencies?: { readFileFunc?: readTable };
 }
 
-export class FileScan extends QueryIterator {
+export class FileScanIterator extends QueryIterator {
   filename: string;
   private columns?: string[];
   private rows?: string[][];

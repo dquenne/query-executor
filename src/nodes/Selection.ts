@@ -2,7 +2,7 @@ import { nextUntil } from "../lib/util/iteratorUtil.ts";
 
 import { QueryIterator, Tuple } from "./QueryIterator.ts";
 
-export class Selection extends QueryIterator {
+export class SelectionIterator extends QueryIterator {
   predicate: (val: Tuple) => boolean;
 
   constructor(

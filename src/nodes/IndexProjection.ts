@@ -1,11 +1,11 @@
 import { QueryIterator } from "./QueryIterator.ts";
 import { selectIndices } from "../lib/util/objectUtil.ts";
-import { CallbackProjection } from "./CallbackProjection.ts";
+import { CallbackProjectionIterator } from "./CallbackProjection.ts";
 
 /**
  * select columns from input iterator
  */
-export class IndexProjection extends CallbackProjection {
+export class IndexProjectionIterator extends CallbackProjectionIterator {
   constructor(
     options: { indices: number[] | Set<number> },
     inputs: [QueryIterator]

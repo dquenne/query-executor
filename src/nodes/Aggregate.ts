@@ -8,7 +8,7 @@ interface AggregateOptions<State> {
   final(endState: State): Tuple;
 }
 
-export class Aggregate<State extends {}> extends QueryIterator {
+export class AggregateIterator<State extends {}> extends QueryIterator {
   private index = 0;
   private initialState: State;
   private callback: (value: Tuple, prevState: State) => State;

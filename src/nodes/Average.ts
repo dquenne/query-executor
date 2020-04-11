@@ -1,11 +1,14 @@
 import { QueryIterator } from "./QueryIterator.ts";
-import { Aggregate } from "./Aggregate.ts";
+import { AggregateIterator } from "./Aggregate.ts";
 
 interface AverageOptions {
   indexToAverage: number;
 }
 
-export class Average extends Aggregate<{ count: number; sum: number }> {
+export class AverageIterator extends AggregateIterator<{
+  count: number;
+  sum: number;
+}> {
   indexToAverage: number;
   constructor(options: AverageOptions, public inputs: [QueryIterator]) {
     super(

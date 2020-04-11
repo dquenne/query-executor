@@ -1,10 +1,10 @@
 import { assertEquals } from "../testDeps.ts";
 
-import { FileScan } from "../../src/nodes/FileScan.ts";
+import { FileScanIterator } from "../../src/nodes/FileScan.ts";
 import { fakeMovieTable } from "../mocks/fakeTables.ts";
 
 Deno.test("FileScan - basic", function () {
-  const fsIterator = new FileScan({
+  const fsIterator = new FileScanIterator({
     filename: "stuff",
     dependencies: {
       readFileFunc: () => fakeMovieTable,

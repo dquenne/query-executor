@@ -1,9 +1,9 @@
 import { QueryIterator } from "./QueryIterator.ts";
-import { Aggregate } from "./Aggregate.ts";
+import { AggregateIterator } from "./Aggregate.ts";
 
 interface CountOptions {}
 
-export class Count extends Aggregate<{ count: number }> {
+export class CountIterator extends AggregateIterator<{ count: number }> {
   constructor(options: CountOptions, public inputs: [QueryIterator]) {
     super(
       {
