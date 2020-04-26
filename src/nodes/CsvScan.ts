@@ -8,19 +8,19 @@ import { QueryIterator } from "./QueryIterator.ts";
 
 type readTable = (filename: string) => { header: string[]; data: string[][] };
 
-interface FileScanOptions {
+interface CsvScanOptions {
   filename: string;
   dependencies?: { readFileFunc?: readTable };
 }
 
-export class FileScanIterator extends QueryIterator {
+export class CsvScanIterator extends QueryIterator {
   filename: string;
   private columns?: string[];
   private rows?: string[][];
   private rowIndex = 0;
   readTable: readTable;
 
-  constructor(options: FileScanOptions, public inputs: [] = []) {
+  constructor(options: CsvScanOptions, public inputs: [] = []) {
     super([]);
     this.filename = options.filename;
     this.readTable = options.dependencies?.readFileFunc || readCsv;

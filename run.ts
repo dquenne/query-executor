@@ -1,4 +1,4 @@
-import { FileScanIterator } from "./src/nodes/FileScan.ts";
+import { CsvScanIterator } from "./src/nodes/CsvScan.ts";
 import { CountIterator } from "./src/nodes/Count.ts";
 import { SelectionIterator } from "./src/nodes/Selection.ts";
 import { MemorySortIterator } from "./src/nodes/MemorySort.ts";
@@ -17,14 +17,14 @@ if (!tableFilename) {
   Deno.exit(1);
 }
 
-const fs = new FileScanIterator({ filename: tableFilename });
+const fs = new CsvScanIterator({ filename: tableFilename });
 
 fs.init();
 
 console.log("first three", [fs.next(), fs.next(), fs.next()]);
 
 const countIterator = new CountIterator({}, [
-  new FileScanIterator({ filename: tableFilename }),
+  new CsvScanIterator({ filename: tableFilename }),
 ]);
 
 countIterator.init();
@@ -33,7 +33,7 @@ console.log("total count", countIterator.next(), countIterator.next());
 
 const countIterator2 = new CountIterator({}, [
   new SelectionIterator({ predicate: (val) => Number(val[0]) < 5000 }, [
-    new FileScanIterator({ filename: tableFilename }),
+    new CsvScanIterator({ filename: tableFilename }),
   ]),
 ]);
 
@@ -52,7 +52,7 @@ const memSortIt = new MemorySortIterator(
   { comparator: descendingComparator(0) },
   [
     new SelectionIterator({ predicate: (val) => val[1].length < 15 }, [
-      new FileScanIterator({ filename: tableFilename }),
+      new CsvScanIterator({ filename: tableFilename }),
     ]),
   ]
 );
