@@ -1,7 +1,14 @@
-import { CsvScanIterator } from "./src/nodes/CsvScan.ts";
-import { CountIterator } from "./src/nodes/Count.ts";
-import { SelectionIterator } from "./src/nodes/Selection.ts";
-import { MemorySortIterator } from "./src/nodes/MemorySort.ts";
+import { CsvScan } from "./src/lib/iterator/CsvScan.ts";
+import { Count } from "./src/lib/iterator/Count.ts";
+import { Selection } from "./src/lib/iterator/Selection.ts";
+import { MemorySort } from "./src/lib/iterator/MemorySort.ts";
+import { drain } from "./src/lib/util/iteratorUtil.ts";
+
+async function wrapWithTime(callback: () => void | Promise<void>) {
+  const start = new Date();
+  await callback();
+  console.log(`(${(new Date().getTime() - start.getTime()) / 1000}s)`);
+}
 
 const tableFilename = Deno.args[0];
 
@@ -17,52 +24,36 @@ if (!tableFilename) {
   Deno.exit(1);
 }
 
-const fs = new CsvScanIterator({ filename: tableFilename });
+await wrapWithTime(async () => {
+  const fs = CsvScan(tableFilename);
 
-fs.init();
+  console.log("first three", (await drain(fs)).slice(0, 3));
+});
 
-console.log("first three", [fs.next(), fs.next(), fs.next()]);
+await wrapWithTime(async () => {
+  const countIterator = Count(CsvScan(tableFilename));
 
-const countIterator = new CountIterator({}, [
-  new CsvScanIterator({ filename: tableFilename }),
-]);
+  console.log("total count", (await drain(countIterator))[0]);
+});
 
-countIterator.init();
+await wrapWithTime(async () => {
+  const countIterator2 = Count(
+    Selection((val) => Number(val["movieId"]) < 5000, CsvScan(tableFilename))
+  );
 
-console.log("total count", countIterator.next(), countIterator.next());
+  console.log("how many with id < 5000:", (await drain(countIterator2))[0]);
+});
 
-const countIterator2 = new CountIterator({}, [
-  new SelectionIterator({ predicate: (val) => Number(val[0]) < 5000 }, [
-    new CsvScanIterator({ filename: tableFilename }),
-  ]),
-]);
+await wrapWithTime(async () => {
+  const descendingComparator = (key: string) => (
+    a: Record<string, any>,
+    b: Record<string, any>
+  ) => Number(b[key]) - Number(a[key]);
 
-countIterator2.init();
+  const memSortIt = MemorySort(
+    descendingComparator("movieId"),
+    Selection((val) => val["title"].length < 15, CsvScan(tableFilename))
+  );
 
-console.log(
-  "how many with id < 5000",
-  countIterator2.next(),
-  countIterator2.next()
-);
-
-const descendingComparator = (index: number) => (a: string[], b: string[]) =>
-  Number(b[index]) - Number(a[index]);
-
-const memSortIt = new MemorySortIterator(
-  { comparator: descendingComparator(0) },
-  [
-    new SelectionIterator({ predicate: (val) => val[1].length < 15 }, [
-      new CsvScanIterator({ filename: tableFilename }),
-    ]),
-  ]
-);
-
-memSortIt.init();
-
-console.log(
-  "sorted backwards",
-  memSortIt.next(),
-  memSortIt.next(),
-  memSortIt.next(),
-  memSortIt.next()
-);
+  console.log("sorted backwards", (await drain(memSortIt)).slice(0, 5));
+});
