@@ -21,5 +21,5 @@ deno --allow-read run.ts ../ml-20m/movies.csv
 Usage:
 
 ```
-deno test
+deno test ./test
 ```
