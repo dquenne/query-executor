@@ -2,7 +2,7 @@ import { CsvScan } from "./src/lib/iterator/CsvScan.ts";
 import { Count } from "./src/lib/iterator/Count.ts";
 import { Selection } from "./src/lib/iterator/Selection.ts";
 import { MemorySort } from "./src/lib/iterator/MemorySort.ts";
-import { drain } from "./src/lib/util/iteratorUtil.ts";
+import { head } from "./src/lib/util/iteratorUtil.ts";
 
 async function wrapWithTime(callback: () => void | Promise<void>) {
   const start = new Date();
@@ -27,13 +27,13 @@ if (!tableFilename) {
 await wrapWithTime(async () => {
   const fs = CsvScan(tableFilename);
 
-  console.log("first three", (await drain(fs)).slice(0, 3));
+  console.log("first three:", await head(fs, 3));
 });
 
 await wrapWithTime(async () => {
   const countIterator = Count(CsvScan(tableFilename));
 
-  console.log("total count", (await drain(countIterator))[0]);
+  console.log("total count:", await head(countIterator, 1));
 });
 
 await wrapWithTime(async () => {
@@ -41,7 +41,7 @@ await wrapWithTime(async () => {
     Selection((val) => Number(val["movieId"]) < 5000, CsvScan(tableFilename))
   );
 
-  console.log("how many with id < 5000:", (await drain(countIterator2))[0]);
+  console.log("how many with id < 5000:", await head(countIterator2, 1));
 });
 
 await wrapWithTime(async () => {
@@ -55,5 +55,5 @@ await wrapWithTime(async () => {
     Selection((val) => val["title"].length < 15, CsvScan(tableFilename))
   );
 
-  console.log("sorted backwards", (await drain(memSortIt)).slice(0, 5));
+  console.log("sorted backwards", await head(memSortIt, 5));
 });
