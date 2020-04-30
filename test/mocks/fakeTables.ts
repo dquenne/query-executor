@@ -7,4 +7,16 @@ export const fakeMovieTable = {
   ],
 };
 
-export const fakeMovieTuples = fakeMovieTable.data;
+export const fakeMovieTuples = [
+  {
+    movieId: "1",
+    title: "Toy Story (1995)",
+    genres: "Adventure|Animation|Children|Comedy|Fantasy",
+  },
+  {
+    movieId: "2",
+    title: "Jumanji (1995)",
+    genres: "Adventure|Children|Fantasy",
+  },
+  { movieId: "3", title: "Grumpier Old Men (1995)", genres: "Comedy|Romance" },
+];

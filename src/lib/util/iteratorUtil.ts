@@ -1,20 +1,11 @@
 import { BaseIterator } from "../../nodes/Iterator.ts";
 
-export function forEach<TNext, TDone>(
-  it: BaseIterator<TNext, TDone>,
-  callback: (val: TNext) => void
-): void {
-  let next = it.next();
-  while (!it.isDone(next)) {
-    callback(next);
-    next = it.next();
+export async function drain<T>(input: Iterable<T> | AsyncIterable<T>) {
+  const out = [];
+  for await (const row of input) {
+    out.push(row);
   }
-}
-
-export function drain<TNext, TDone>(it: BaseIterator<TNext, TDone>) {
-  const res = <TNext[]>[];
-  forEach(it, (val) => res.push(val));
-  return res;
+  return out;
 }
 
 export function nextUntil<TNext, TDone>(
