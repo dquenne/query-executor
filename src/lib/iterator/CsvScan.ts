@@ -1,12 +1,17 @@
-import { readFileStr, parseCsv } from "../../../deps.ts";
+import { BufReader, streamMatrix } from "../../../deps.ts";
 
-export async function* CsvScan(path: string) {
-  const file = await readFileStr(path);
-  const parsed = (await parseCsv(file, { header: true })) as Record<
-    string,
-    string
-  >[];
-  for (const row of parsed) {
-    yield row;
+export async function* CsvScan<RowType = string[]>(
+  path: string,
+  converterConstructor: (columnOrder: string[]) => (csvRow: string[]) => RowType
+) {
+  const file = await Deno.open(path);
+  const iterator = streamMatrix(new BufReader(file));
+  const header = (await iterator.next()).value;
+  if (!header) {
+    return;
+  }
+  const converter = converterConstructor(header);
+  for await (const row of iterator) {
+    yield converter(row);
   }
 }

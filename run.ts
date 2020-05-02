@@ -3,12 +3,8 @@ import { Count } from "./src/lib/iterator/Count.ts";
 import { Selection } from "./src/lib/iterator/Selection.ts";
 import { MemorySort } from "./src/lib/iterator/MemorySort.ts";
 import { head } from "./src/lib/util/iteratorUtil.ts";
-
-async function wrapWithTime(callback: () => void | Promise<void>) {
-  const start = new Date();
-  await callback();
-  console.log(`(${(new Date().getTime() - start.getTime()) / 1000}s)`);
-}
+import { wrapWithTime } from "./src/lib/util/functionUtil.ts";
+import { buildSchema, Column } from "./src/lib/schema/SchemaConstructor.ts";
 
 const tableFilename = Deno.args[0];
 
@@ -24,21 +20,33 @@ if (!tableFilename) {
   Deno.exit(1);
 }
 
+const schema = buildSchema(
+  {
+    movieId: Column.Number,
+    title: Column.String,
+    genres: Column.String,
+  },
+  ["movieId", "title", "genres"]
+);
+
 await wrapWithTime(async () => {
-  const fs = CsvScan(tableFilename);
+  const fs = CsvScan(tableFilename, schema.getCsvConverter);
 
   console.log("first three:", await head(fs, 3));
 });
 
 await wrapWithTime(async () => {
-  const countIterator = Count(CsvScan(tableFilename));
+  const countIterator = Count(CsvScan(tableFilename, schema.getCsvConverter));
 
   console.log("total count:", await head(countIterator, 1));
 });
 
 await wrapWithTime(async () => {
   const countIterator2 = Count(
-    Selection((val) => Number(val["movieId"]) < 5000, CsvScan(tableFilename))
+    Selection(
+      (val) => Number(val["movieId"]) < 5000,
+      CsvScan(tableFilename, schema.getCsvConverter)
+    )
   );
 
   console.log("how many with id < 5000:", await head(countIterator2, 1));
@@ -52,7 +60,10 @@ await wrapWithTime(async () => {
 
   const memSortIt = MemorySort(
     descendingComparator("movieId"),
-    Selection((val) => val["title"].length < 15, CsvScan(tableFilename))
+    Selection(
+      (val) => val["title"].length < 15,
+      CsvScan(tableFilename, schema.getCsvConverter)
+    )
   );
 
   console.log("sorted backwards", await head(memSortIt, 5));

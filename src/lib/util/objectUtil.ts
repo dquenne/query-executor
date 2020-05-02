@@ -53,3 +53,10 @@ export function selectIndices<T>(
     return input.filter((val, index) => indices.includes(index));
   return input.filter((val, index) => indices.has(index));
 }
+
+/**
+ * `Object.keys` except with a better type anotation
+ */
+export function smartKeys<T>(obj: T) {
+  return Object.keys(obj) as Array<keyof T>;
+}
