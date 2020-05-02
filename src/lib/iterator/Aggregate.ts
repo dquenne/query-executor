@@ -1,9 +1,10 @@
 /**
  * Could also be called 'Reduce'
  */
-export async function* Aggregate<In, Out>(
-  reducer: (prev: Out, next: In, index: number) => Out,
-  start: Out,
+export async function* Aggregate<In, ReducerOut, Out>(
+  reducer: (prev: ReducerOut, next: In, index: number) => ReducerOut,
+  final: (end: ReducerOut) => Out,
+  start: ReducerOut,
   input: Iterable<In> | AsyncIterable<In>
 ) {
   let val = start;
@@ -12,5 +13,5 @@ export async function* Aggregate<In, Out>(
     val = reducer(val, row, i);
     i++;
   }
-  yield val;
+  yield final(val);
 }
